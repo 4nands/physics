@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ブラウン運動</title>
+        <style>
+            #canvas{
+                width: 500px;
+                height: 500px;
+                background-color: #000000;
+            }
+        </style>
+<script>
+    let n=20;
+    let r=5;
+    let x=[];
+    let y=[];
+    let vx=[];
+    let vy=[];
+    let v=10;
+    let X=250;
+    let Y=250;
+    let R=50;
+
+    var canvasElement;
+    var context;
+    window.addEventListener('load',function(){
+        drawStart();
+    })
+    function drawStart(){
+        canvasElement=document.getElementById('canvas');
+        canvasElement.width=canvasElement.clientWidth;
+        canvasElement.height=canvasElement.clientHeight;
+        context=canvasElement.getContext('2d');
+
+        for(let i=0;i<n;i++){
+            x[i]=Math.random()*500;
+            y[i]=Math.random()*500;
+
+            a=Math.random()*Math.PI*2;
+            vx[i]=v*Math.sin(a);
+            vy[i]=v*Math.cos(a);
+            
+        }
+
+  
+        loop();
+    }
+    function loop(){
+        
+        var width=canvasElement.width;
+        var height=canvasElement.height;
+        
+        context.clearRect(0,0,width,height);
+        
+
+        for(let i=0;i<n;i++){
+            x[i]+=vx[i];
+            y[i]+=vy[i];
+        
+            if(x[i]<r || x[i]>width-r){
+                vx[i]=-vx[i];
+            }
+            if(y[i]<r || y[i]>height-r){
+                vy[i]=-vy[i]
+            }
+        
+            L=(X-x[i])*(X-x[i])+(Y-y[i])*(Y-y[i])
+            l=(R+r)*(R+r);
+
+            if(l>L){
+                X+=vx[i]/2;
+                Y+=vy[i]/2
+                vx[i]=-vx[i];
+                vy[i]=-vy[i];
+                x[i]+=vx[i];
+                y[i]+=vy[i];
+                
+            }
+        
+        
+            context.beginPath();
+            context.arc(x[i],y[i],r,0,2*Math.PI,false);
+            context.closePath();
+            context.fillStyle="#888888";    
+            context.fill();
+
+            context.beginPath();
+            context.arc(X,Y,R,0,2*Math.PI,false);
+            context.closePath();
+            context.fillStyle="#FFFFFF";    
+            context.fill();
+
+        }
+
+        requestAnimationFrame(loop)
+    }
+</script>
+    </head>
+    <body>
+        <canvas id='canvas'></canvas>
+
+    </body>
+</html>
